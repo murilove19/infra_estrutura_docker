@@ -97,17 +97,6 @@ docker run -d \
 docker exec -it mysql-prod mysql -uroot -psenha123 -e "USE meubanco; SELECT * FROM usuarios;"
 ```
 
-**Evidências:**
-
-Volume criado com sucesso:
-![Volume Criado](screenshots/cenario1/Cenário%201%20-%20Volume%20Criado.png)
-
-Tabela criada e dados inseridos:
-![Dados Inseridos](screenshots/cenario1/Cenário%201%20-%20Dados%20Inseridos.png)
-
-Dados persistidos após remoção e recriação do container:
-![Dados Persistidos](screenshots/cenario1/Cenário%201%20-%20Dados%20Persistidos.png)
-
 **Resultado:** os 3 registros continuaram presentes após a remoção e recriação do container, confirmando a persistência do Named Volume.
 
 ---
@@ -163,11 +152,6 @@ docker exec -it mysql-prod mysql -uroot -psenha123 \
   -e "USE meubanco; SELECT * FROM usuarios;"
 ```
 
-**Evidências:**
-
-Dados restaurados com sucesso após perda total do volume:
-![Dados Restaurados](screenshots/cenario2/Cenário%202%20-%20Dados%20Restaurados.png)
-
 **Resultado:** após simular a perda total do volume e restaurar o backup `.tar.gz`, todos os dados voltaram corretamente.
 
 ---
@@ -202,11 +186,6 @@ docker exec -it container-bind cat /app/arquivo-host.txt
 - No host o arquivo está em: `~/infra-persistencia-docker/docker/bindmount-teste/arquivo-host.txt`
 - No container o mesmo arquivo aparece em: `/app/arquivo-host.txt`
 
-**Evidências:**
-
-Arquivo criado no host acessível dentro do container:
-![Bind Mount](screenshots/cenario3/Cenário%203%20-%20Bind%20Mount.png)
-
 **Resultado:** o arquivo criado no host apareceu imediatamente dentro do container, comprovando o espelhamento em tempo real do Bind Mount.
 
 ---
@@ -236,11 +215,6 @@ docker run --rm \
   -v volume-compartilhado:/dados \
   ubuntu cat /dados/log.txt
 ```
-
-**Evidências:**
-
-Container consumidor lendo dados gerados pelo produtor em tempo real:
-![Compartilhamento](screenshots/cenario4/Cenário%204%20-%20Compartilhamento.png)
 
 **Resultado:** o container consumidor exibiu todas as linhas geradas pelo produtor, comprovando o compartilhamento de volume entre containers distintos.
 
@@ -287,28 +261,50 @@ chmod +x ~/infra-persistencia-docker/scripts/backup.sh
 ~/infra-persistencia-docker/scripts/backup.sh
 ```
 
-**Evidências:**
-
-Script executado com sucesso gerando backup com timestamp:
-![Backup Automatizado](screenshots/cenario5/Cenário%205%20-%20Backup%20Automatizado.png)
-
 **Resultado:** o script gerou automaticamente o arquivo `backup_20260523_112240.tar.gz` na pasta `backups/`, com o timestamp correto no nome.
 
 ---
 
 ## 4. Evidências
 
-Todos os prints de execução estão organizados na pasta `screenshots/`, separados por cenário:
+### Cenário 1 — Persistência de Dados com MySQL e Named Volume
 
-| Cenário | Arquivo | Descrição |
-|---|---|---|
-| 1 | `Cenário 1 - Volume Criado.png` | Volume `mysql-prod-data` criado |
-| 1 | `Cenário 1 - Dados Inseridos.png` | Tabela criada e 3 registros inseridos |
-| 1 | `Cenário 1 - Dados Persistidos.png` | Dados presentes após remoção e recriação do container |
-| 2 | `Cenário 2 - Dados Restaurados.png` | Dados recuperados após perda total do volume |
-| 3 | `Cenário 3 - Bind Mount.png` | Arquivo do host acessível dentro do container |
-| 4 | `Cenário 4 - Compartilhamento.png` | Container consumidor lendo dados do produtor |
-| 5 | `Cenário 5 - Backup Automatizado.png` | Script gerando backup com timestamp |
+Volume `mysql-prod-data` criado com sucesso:
+![Volume Criado](screenshots/cenario1/Cenário%201%20-%20Volume%20Criado.png)
+
+Tabela criada e 3 registros inseridos no banco:
+![Dados Inseridos](screenshots/cenario1/Cenário%201%20-%20Dados%20Inseridos.png)
+
+Dados presentes após remoção e recriação do container — persistência confirmada:
+![Dados Persistidos](screenshots/cenario1/Cenário%201%20-%20Dados%20Persistidos.png)
+
+---
+
+### Cenário 2 — Backup e Restauração de Volume
+
+Dados recuperados com sucesso após perda total do volume:
+![Dados Restaurados](screenshots/cenario2/Cenário%202%20-%20Dados%20Restaurados.png)
+
+---
+
+### Cenário 3 — Bind Mount
+
+Arquivo criado no host acessível imediatamente dentro do container:
+![Bind Mount](screenshots/cenario3/Cenário%203%20-%20Bind%20Mount.png)
+
+---
+
+### Cenário 4 — Compartilhamento Entre Containers
+
+Container consumidor lendo em tempo real os dados gerados pelo container produtor:
+![Compartilhamento](screenshots/cenario4/Cenário%204%20-%20Compartilhamento.png)
+
+---
+
+### Cenário 5 — Automação de Backup
+
+Script `backup.sh` executado com sucesso gerando arquivo com timestamp:
+![Backup Automatizado](screenshots/cenario5/Cenário%205%20-%20Backup%20Automatizado.png)
 
 ---
 
