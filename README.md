@@ -23,7 +23,7 @@ O objetivo desta atividade é entender na prática como esses mecanismos funcion
 | Git | 2.34.1 |
 | CPU | 1 vCPU |
 | RAM | 2 GB |
-| Virtualização | VirtualBox |
+| Virtualização | Oracle VirtualBox |
 
 ### Verificação do ambiente
 
