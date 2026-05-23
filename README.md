@@ -94,14 +94,21 @@ docker run -d \
   mysql:8.0
 
 # 8. Validar que os dados persistiram
-docker exec -it mysql-prod mysql -uroot -psenha123
-USE meubanco;
-SELECT * FROM usuarios;
+docker exec -it mysql-prod mysql -uroot -psenha123 -e "USE meubanco; SELECT * FROM usuarios;"
 ```
 
-**Resultado:** os 3 registros continuaram presentes após a remoção e recriação do container, confirmando a persistência do Named Volume.
+**Evidências:**
 
-**Evidências:** `screenshots/cenario1/`
+Volume criado com sucesso:
+![Volume Criado](screenshots/cenario1/Cenário%201%20-%20Volume%20Criado.png)
+
+Tabela criada e dados inseridos:
+![Dados Inseridos](screenshots/cenario1/Cenário%201%20-%20Dados%20Inseridos.png)
+
+Dados persistidos após remoção e recriação do container:
+![Dados Persistidos](screenshots/cenario1/Cenário%201%20-%20Dados%20Persistidos.png)
+
+**Resultado:** os 3 registros continuaram presentes após a remoção e recriação do container, confirmando a persistência do Named Volume.
 
 ---
 
@@ -156,9 +163,12 @@ docker exec -it mysql-prod mysql -uroot -psenha123 \
   -e "USE meubanco; SELECT * FROM usuarios;"
 ```
 
-**Resultado:** após simular a perda total do volume e restaurar o backup `.tar.gz`, todos os dados voltaram corretamente.
+**Evidências:**
 
-**Evidências:** `screenshots/cenario2/` e `backups/`
+Dados restaurados com sucesso após perda total do volume:
+![Dados Restaurados](screenshots/cenario2/Cenário%202%20-%20Dados%20Restaurados.png)
+
+**Resultado:** após simular a perda total do volume e restaurar o backup `.tar.gz`, todos os dados voltaram corretamente.
 
 ---
 
@@ -188,13 +198,16 @@ echo "Arquivo criado no HOST em $(date)" \
 docker exec -it container-bind cat /app/arquivo-host.txt
 ```
 
-**Resultado:** o arquivo criado no host apareceu imediatamente dentro do container no caminho `/app/arquivo-host.txt`, comprovando o espelhamento em tempo real do Bind Mount.
-
 **Diferença entre host e container:**
 - No host o arquivo está em: `~/infra-persistencia-docker/docker/bindmount-teste/arquivo-host.txt`
 - No container o mesmo arquivo aparece em: `/app/arquivo-host.txt`
 
-**Evidências:** `screenshots/cenario3/`
+**Evidências:**
+
+Arquivo criado no host acessível dentro do container:
+![Bind Mount](screenshots/cenario3/Cenário%203%20-%20Bind%20Mount.png)
+
+**Resultado:** o arquivo criado no host apareceu imediatamente dentro do container, comprovando o espelhamento em tempo real do Bind Mount.
 
 ---
 
@@ -224,9 +237,12 @@ docker run --rm \
   ubuntu cat /dados/log.txt
 ```
 
-**Resultado:** o container consumidor exibiu todas as linhas geradas pelo produtor, comprovando o compartilhamento de volume entre containers distintos.
+**Evidências:**
 
-**Evidências:** `screenshots/cenario4/`
+Container consumidor lendo dados gerados pelo produtor em tempo real:
+![Compartilhamento](screenshots/cenario4/Cenário%204%20-%20Compartilhamento.png)
+
+**Resultado:** o container consumidor exibiu todas as linhas geradas pelo produtor, comprovando o compartilhamento de volume entre containers distintos.
 
 ---
 
@@ -271,9 +287,12 @@ chmod +x ~/infra-persistencia-docker/scripts/backup.sh
 ~/infra-persistencia-docker/scripts/backup.sh
 ```
 
-**Resultado:** o script gerou automaticamente o arquivo `backup_20260523_112240.tar.gz` na pasta `backups/`, com o timestamp correto no nome.
+**Evidências:**
 
-**Evidências:** `screenshots/cenario5/` e `backups/`
+Script executado com sucesso gerando backup com timestamp:
+![Backup Automatizado](screenshots/cenario5/Cenário%205%20-%20Backup%20Automatizado.png)
+
+**Resultado:** o script gerou automaticamente o arquivo `backup_20260523_112240.tar.gz` na pasta `backups/`, com o timestamp correto no nome.
 
 ---
 
@@ -281,7 +300,7 @@ chmod +x ~/infra-persistencia-docker/scripts/backup.sh
 
 Todos os prints de execução estão organizados na pasta `screenshots/`, separados por cenário:
 
-| Cenário | Print | Descrição |
+| Cenário | Arquivo | Descrição |
 |---|---|---|
 | 1 | `Cenário 1 - Volume Criado.png` | Volume `mysql-prod-data` criado |
 | 1 | `Cenário 1 - Dados Inseridos.png` | Tabela criada e 3 registros inseridos |
